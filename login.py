@@ -7,33 +7,32 @@ my_app.secret_key = os.urandom(32)
 
 username = "john"
 password = "doe"
-failure = ""
-
 
 @my_app.route('/', methods=['GET', 'POST'])
 def root():
-    if (session.get("john") == "doe"):
-        return render_template('welcome.html')
+    if (session.get(username) == password):
+        return render_template('welcome.html', name = username)
     else:
      return render_template('login.html')
 
 @my_app.route('/submitted', methods=['GET','POST'])
 def submitted():
+    failure = "Your login was not succesful. You entered the incorrect "
     if (request.form["name"] == username):
         if (request.form["pass"] == password):
             #success
             session["john"] = "doe"
-            return render_template('success.html', name = request.form["name"])
+            return render_template('welcome.html', name = request.form["name"])
         else:
             #wrong password
-            failure = "password"
+            failure += "password"
     elif (request.form["pass"] == password):
         #wrong username
-        failure = "username"
+        failure += "username"
     else:
         #wrong username AND password
-        failure = "username and password"
-    return render_template('fail.html', name = request.form["name"], fail = failure )
+        failure += "username and password"
+    return render_template("login.html", fail = failure)
 
 @my_app.route('/loggedout', methods=['GET','POST'])
 def logout():
