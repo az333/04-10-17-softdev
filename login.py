@@ -11,12 +11,15 @@ failure = ""
 
 @my_app.route('/', methods=['GET', 'POST'])
 def root():
+    global failure
     if (session.get(username) == password):
         return render_template('welcome.html', name = username)
     elif (failure != ""):
-        return render_template('login.html', fail = failure)
+        temp = failure
+        failure = ""
+        return render_template('login.html', fail = temp)
     else:
-     return render_template('login.html')
+        return render_template('login.html')
 
 @my_app.route('/submitted', methods=['GET','POST'])
 def submitted():
@@ -32,18 +35,17 @@ def submitted():
             #return render_template('welcome.html', name = request.form["name"])
         else:
             #wrong password
-            failure += "password"
+            failure += "password."
     elif (request.form["pass"] == password):
         #wrong username
-        failure += "username"
+        failure += "username."
     else:
         #wrong username AND password
-        failure += "username and password"
+        failure += "username and password."
     return redirect('/')
 
 @my_app.route('/loggedout', methods=['GET','POST'])
 def logout():
-    logout = ""
     if (session.get(username)==password):
         session.pop(username)
     return redirect("/")
