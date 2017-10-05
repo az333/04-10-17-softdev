@@ -29,9 +29,8 @@ def submitted():
         if (request.form["pass"] == password):
             #success
             failure = ""
-            session["john"] = "doe"
+            session[username] = password
             return redirect("/")
-
             #return render_template('welcome.html', name = request.form["name"])
         else:
             #wrong password
