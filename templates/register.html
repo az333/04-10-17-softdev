@@ -1,0 +1,27 @@
+<! DOCTYPE HTML>
+<html>
+  <head>
+    <title>  Register  </title>
+  </head>
+  <body>
+
+    Hello, please enter a username and password to register. <br><br>
+      <form method = "post" action ="/submitregister">
+        Username:
+          <input type="text" name="newuser" required><br><br>
+        Password:
+          <input type = "password" name = "newpass" required>  <br><br>
+        Repeat password:
+          <input type="password" name = "repeatpass" required> <br> <br>
+          <input type="submit" value="Register">
+        </form>
+
+        <form action = '/'>
+            <input type="submit" value="Go Back"> <br> <br> 
+            <div style="color:#FF5733">
+              {{repeatfail}}
+            </div>
+          </form>
+
+  </body>
+</html>

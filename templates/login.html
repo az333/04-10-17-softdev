@@ -6,20 +6,27 @@
   <body>
   <form method = "post" action ="/submitted">
 
-  Enter your username:<br>
-  <input type="text" name="name"><br><br>
+    Enter your username:<br>
+    <input type="text" name="name" required><br><br>
 
-  Enter your password: <br>
-  <input type="password" name="pass"><br><br>
+    Enter your password: <br>
+    <input type="password" name="pass" required><br><br>
 
-  <input type="submit" value="Submit"> <br> <br>
+    <input type="submit" value="Submit"> <br> <br>
+</form>
+
+  <form method = "post" action = "/registration">
+      Don't have an account?
+    <input type="submit" value = "Register">
+  </form>
 
   <div style="color:#FF5733">
-    {{fail}} <br>
+    {{fail}}  <br>
   </div>
 
-
-</form>
+  <div style="color:#0000FF">
+    {{success}} <br>
+  </div>
 
 
   </body>
