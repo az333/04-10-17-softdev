@@ -2,20 +2,21 @@ from flask import Flask, render_template, request, session, redirect, url_for
 import os, csv
 
 my_app = Flask(__name__)
-
 my_app.secret_key = os.urandom(32)
 
-username = ""
-password = ""
 failure = ""
 success = ""
 logindict = {};
 
+with open('data/logins.csv', mode='r') as infile:
+    reader = csv.reader(infile)
+    mydict = {rows[0]:rows[1] for rows in reader}
+
 @my_app.route('/', methods=['GET', 'POST'])
 def root():
-    global failure, success, username, password
-    if (session.get(username) == password):
-        return render_template('welcome.html', name = username)
+    global failure, success
+    if ('user' in session):
+        return render_template('welcome.html', name = session['user'])
     elif (failure != ""):
         failtemp = failure
         failure = ""
@@ -29,26 +30,22 @@ def root():
 
 @my_app.route('/submitted', methods=['GET','POST'])
 def submitted():
-    global failure, username, password
+    global failure
     failure = "Your login was not succesful. You entered the incorrect "
     user = request.form["name"]
-    passy= request.form["pass"]
+    passwrd= request.form["pass"]
     if (user in logindict):
-        if (request.form["pass"] == logindict[user]):
+        if (passwrd == logindict[user]):
             #success
             failure = ""
-            session[user] = passy
-            username = user
-            password = passy
-            return redirect("/")
-            #return render_template('welcome.html', name = request.form["name"])
+            session['user'] = user
         else:
             #wrong password
             failure += "password."
     else:
         #wrong username AND password
         failure += "username."
-    return redirect('/')
+    return redirect(url_for('root'))
 
 @my_app.route('/registration', methods=['GET','POST'])
 def register():
@@ -62,13 +59,13 @@ def submitregister():
     else:
         logindict[request.form["newuser"]] = request.form["newpass"]
         success = "You have successfully registered your account! You may log in now."
-        return redirect("/")
+        return redirect(url_for("root"))
 
 @my_app.route('/loggedout', methods=['GET','POST'])
 def logout():
-    if (session.get(username)==password):
-        session.pop(username)
-    return redirect("/")
+    if ('user' in session):
+        session.pop('user')
+    return redirect(url_for("root"))
 
 if __name__ == '__main__':
     my_app.debug = True
