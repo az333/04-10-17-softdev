@@ -6,11 +6,12 @@ my_app.secret_key = os.urandom(32)
 
 failure = ""
 success = ""
-logindict = {};
+logindict = {}
 
 with open('data/logins.csv', mode='r') as infile:
     reader = csv.reader(infile)
-    mydict = {rows[0]:rows[1] for rows in reader}
+    logindict = {rows[0]:rows[1] for rows in reader}
+
 
 @my_app.route('/', methods=['GET', 'POST'])
 def root():
@@ -54,12 +55,22 @@ def register():
 @my_app.route('/submitregister', methods= ['GET', 'POST'])
 def submitregister():
     global success
-    if (request.form["newpass"] != request.form["repeatpass"]):
-        return render_template("register.html", repeatfail = "Your passwords do not match. Please try again.")
+    username = request.form["newuser"]
+    passwrd = request.form["newpass"]
+    if (passwrd != request.form["repeatpass"]):
+        return render_template("register.html", registerfail = "Your passwords do not match. Please try again.")
     else:
-        logindict[request.form["newuser"]] = request.form["newpass"]
-        success = "You have successfully registered your account! You may log in now."
-        return redirect(url_for("root"))
+        if  (username not in logindict):
+            logindict[username] = passwrd
+            with open('data/logins.csv','a') as f:
+                w = csv.writer(f)
+                w.writerow([username,passwrd])
+                f.close()
+                success = "You have successfully registered your account! You may log in now."
+                return redirect(url_for("root"))
+        else:
+            return render_template("register.html", registerfail = "An account with that username already exists. Please try again.")
+
 
 @my_app.route('/loggedout', methods=['GET','POST'])
 def logout():
