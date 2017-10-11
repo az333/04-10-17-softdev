@@ -44,7 +44,7 @@ def submitted():
             #wrong password
             failure += "password."
     else:
-        #wrong username AND password
+        #wrong username\
         failure += "username."
     return redirect(url_for('root'))
 
@@ -77,6 +77,14 @@ def logout():
     if ('user' in session):
         session.pop('user')
     return redirect(url_for("root"))
+
+@my_app.route('/delete', methods=['GET', 'POST'])
+def delete():
+    username = session['user']
+    logindict.pop(username)
+    
+    return
+
 
 if __name__ == '__main__':
     my_app.debug = True
