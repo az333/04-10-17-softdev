@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, flash
 import os, csv
 
 my_app = Flask(__name__)
@@ -69,7 +69,8 @@ def submitregister():
                 success = "You have successfully registered your account! You may log in now."
                 return redirect(url_for("root"))
         else:
-            return render_template("register.html", registerfail = "An account with that username already exists. Please try again.")
+            flash("An account with that username already exists. Please try again.")
+            return render_template("register.html")
 
 
 @my_app.route('/loggedout', methods=['GET','POST'])
