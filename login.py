@@ -21,11 +21,13 @@ def root():
     elif (failure != ""):
         failtemp = failure
         failure = ""
-        return render_template('login.html', fail = failtemp)
+        flash(failtemp)
+        return render_template('login.html')
     elif (success != ""):
         suctemp = success
         success = ""
-        return render_template('login.html', success = suctemp)
+        flash(suctemp)
+        return render_template('login.html')
     else:
         return render_template('login.html')
 
